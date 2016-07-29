@@ -46,20 +46,21 @@ class Pokeslack:
         map_url = 'http://maps.google.com?saddr=%s,%s&daddr=%s,%s&directionsmode=walking' % (position[0], position[1], pokemon.position[0], pokemon.position[1])
         time_remaining = pokemon.expires_in_str()
         #stars = ''.join([':star:' for x in xrange(pokemon.rarity)])
-        message = ':pokemon-%s: Wild <%s|%s> appeared! It is <%s|%s away> and will disappear in %s%s.' % ((pokemon.name).lower(), pokedex_url, pokemon.name, map_url, miles_away, time_remaining, from_lure)
+        pname = (pokemon.name).lower()
+        message = 'Wild <%s|%s> appeared! It is <%s|%s away> and will disappear in %s%s.' % (pokedex_url, pokemon.name, map_url, miles_away, time_remaining, from_lure)
         # bold message if rarity > 4
         if pokemon.rarity >= 4:
             message = '*%s*' % message
 
         logging.info('%s: %s', pokemon_key, message)
-        if self._send(message):
+        if self._send(message, pname):
             self.sent_pokemon[pokemon_key] = True
 
-    def _send(self, message):
+    def _send(self, message, pname):
         payload = {
             'username': 'PokéAlert!',
             'text': message,
-            'icon_emoji': ':pokeball:'
+            'icon_emoji': ':pokemon-%s:' % pname
         }
         s = json.dumps(payload)
         r = requests.post(self.slack_webhook_url, data=s)
