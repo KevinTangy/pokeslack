@@ -37,7 +37,7 @@ class Pokeslack:
             logger.info('already sent this pokemon to slack with key %s', pokemon_key)
             return
 
-        from_lure = ', from a lure' if pokemon.from_lure else ''
+        from_lure = ' (from a lure)' if pokemon.from_lure else ''
         miles_away = pokemon.get_distance_str()
 
         position = Pokeconfig.get().position
